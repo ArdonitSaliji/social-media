@@ -25,6 +25,7 @@ import { setMode, setLogout, setSearchUsers } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import SearchResults from "./SearchResults";
+import { useEffect } from "react";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -48,23 +49,25 @@ const Navbar = () => {
   const handleSearch = async (e) => {
     if (e.target.value) {
       let arr = e.target.value.split("");
-      const invalidCharacters = arr.includes(...["/", ":", ";", "?"]);
-      if (!invalidCharacters) {
-        const response = await fetch(`http://localhost:3001/users/find`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            search: e.target.value,
-          }),
-        });
-        const data = await response.json();
-        dispatch(setSearchUsers(data));
-      }
+      const response = await fetch(`http://localhost:3001/users/find`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          search: e.target.value,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      data.length > 0
+        ? dispatch(setSearchUsers(data))
+        : dispatch(setSearchUsers(""));
     } else {
       dispatch(setSearchUsers(""));
     }
   };
-
+  useEffect(() => {
+    dispatch(setSearchUsers(""));
+  }, []);
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
