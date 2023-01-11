@@ -69,7 +69,14 @@ const Navbar = () => {
     dispatch(setSearchUsers(""));
   }, []);
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween
+      zIndex="3"
+      position="fixed"
+      top="0"
+      width="100%"
+      padding="1rem 6%"
+      backgroundColor={alt}
+    >
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"

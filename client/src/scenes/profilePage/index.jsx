@@ -39,8 +39,15 @@ const ProfilePage = () => {
         gap="2rem"
         justifyContent="center"
       >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={userId} picturePath={user.picturePath} />
+        <Box
+          position="relative"
+          flexBasis={isNonMobileScreens ? "26%" : undefined}
+        >
+          <UserWidget
+            values={{ marginTop: "5rem", width: "27.5rem" }}
+            userId={userId}
+            picturePath={user.picturePath}
+          />
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
         </Box>

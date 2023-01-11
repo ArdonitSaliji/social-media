@@ -9,7 +9,7 @@ const AdvertWidget = () => {
   const medium = palette.neutral.medium;
 
   return (
-    <WidgetWrapper>
+    <WidgetWrapper marginTop="5rem">
       <FlexBetween>
         <Typography color={dark} variant="h5" fontWeight="500">
           Sponsored

@@ -7,6 +7,7 @@ import { Avatar, ListItemButton } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    borderRadius: "10px",
     button: true,
     transform: "translateY(100%)",
     left: "0",

@@ -22,8 +22,15 @@ const HomePage = () => {
         gap="0.5rem"
         justifyContent="space-between"
       >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={_id} picturePath={picturePath} />
+        <Box
+          position="relative"
+          flexBasis={isNonMobileScreens ? "26%" : undefined}
+        >
+          <UserWidget
+            values={{ marginTop: "5rem", position: "fixed", width: "27.5rem" }}
+            userId={_id}
+            picturePath={picturePath}
+          />
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
