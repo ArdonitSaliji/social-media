@@ -43,6 +43,9 @@ export const authSlice = createSlice({
     setSearchUsers: (state, action) => {
       state.searchUsers = action.payload;
     },
+    setIsProfile: (state, action) => {
+      state.isProfile = action.payload;
+    },
   },
 });
 
@@ -54,5 +57,6 @@ export const {
   setPosts,
   setPost,
   setSearchUsers,
+  setIsProfile,
 } = authSlice.actions;
 export default authSlice.reducer;

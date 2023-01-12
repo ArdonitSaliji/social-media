@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const PostsWidget = ({ userId, isProfile = false, profile }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
+  const loggedInUser = useSelector((state) => state.user);
 
   const getPosts = async () => {
     const response = await fetch("http://localhost:3001/posts", {
@@ -51,20 +52,36 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           userPicturePath,
           likes,
           comments,
-        }) => (
-          <PostWidget
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            comments={comments}
-          />
-        )
+        }) =>
+          userId === loggedInUser._id ? (
+            <PostWidget
+              key={_id}
+              postId={_id}
+              postUserId={userId}
+              name={`${firstName} ${lastName}`}
+              description={description}
+              location={location}
+              picturePath={picturePath}
+              userPicturePath={userPicturePath}
+              likes={likes}
+              comments={comments}
+              profile={true}
+            />
+          ) : (
+            <PostWidget
+              key={_id}
+              postId={_id}
+              postUserId={userId}
+              name={`${firstName} ${lastName}`}
+              description={description}
+              location={location}
+              picturePath={picturePath}
+              userPicturePath={userPicturePath}
+              likes={likes}
+              comments={comments}
+              profile={false}
+            />
+          )
       )}
     </>
   );

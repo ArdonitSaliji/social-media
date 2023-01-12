@@ -22,6 +22,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  profile,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ const PostWidget = ({
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
+        profile={profile}
         friendId={postUserId}
         name={name}
         subtitle={location}
