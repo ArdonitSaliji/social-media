@@ -51,14 +51,21 @@ const MyPostWidget = ({ picturePath }) => {
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
-    const posts = await response.json();
-    dispatch(setPosts({ posts }));
+    const data = await response.json();
+
+    if (window.location.pathname === "/home") {
+      dispatch(setPosts({ posts: data }));
+    } else {
+      const a = data.filter((x) => x.userId === _id && x);
+      dispatch(setPosts({ posts: a }));
+    }
+
     setImage(null);
     setPost("");
   };
 
   return (
-    <WidgetWrapper marginTop="5rem">
+    <WidgetWrapper mt="5rem">
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase

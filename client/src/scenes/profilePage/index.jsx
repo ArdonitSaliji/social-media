@@ -51,7 +51,7 @@ const ProfilePage = () => {
           flexBasis={isNonMobileScreens ? "26%" : undefined}
         >
           <UserWidget
-            values={{ marginTop: "5rem", width: "27.5rem" }}
+            values={{ mt: "5rem", width: "27.5rem" }}
             userId={userId}
             picturePath={user.picturePath}
           />

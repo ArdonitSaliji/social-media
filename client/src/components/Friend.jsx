@@ -63,6 +63,7 @@ const Friend = ({
       }
     );
     const data = await response.json();
+
     dispatch(setFriends({ friends: data }));
   };
   const useStyles = makeStyles((theme) => ({
@@ -93,11 +94,12 @@ const Friend = ({
         }),
       }
     );
-    const json = await response.json();
+    const { allPosts, userPosts } = await response.json();
+
     if (window.location.pathname === "/home") {
-      dispatch(setPosts({ posts: json.allPosts }));
+      dispatch(setPosts({ posts: allPosts }));
     } else {
-      dispatch(setPosts({ posts: json.userPosts }));
+      dispatch(setPosts({ posts: userPosts }));
     }
   };
 
