@@ -5,6 +5,12 @@ import {
 } from "@mui/icons-material";
 import {
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   List,
   ListItem,
@@ -17,22 +23,31 @@ import { makeStyles } from "@mui/styles";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setFriends } from "state";
+import { setFriends, setPosts } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
-const Friend = ({ friendId, name, subtitle, userPicturePath, profile }) => {
+const Friend = ({
+  postId,
+  friendId,
+  name,
+  subtitle,
+  userPicturePath,
+  profile,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
   const [edit, setEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
+  const isProfile = useSelector((state) => state.isProfile);
   const isFriend =
     friends.length > 0 && friends?.find((friend) => friend._id === friendId);
 
@@ -64,11 +79,43 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, profile }) => {
     },
   }));
 
+  const deletePost = async () => {
+    const response = await fetch(
+      `http://localhost:3001/posts/${postId}/delete/post`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: _id,
+        }),
+      }
+    );
+    const json = await response.json();
+    if (window.location.pathname === "/home") {
+      dispatch(setPosts({ posts: json.allPosts }));
+    } else {
+      dispatch(setPosts({ posts: json.userPosts }));
+    }
+  };
+
   function SearchResults() {
     const classes = useStyles();
     return (
       <List sx={{ position: "absolute" }} className={classes.root}>
-        <ListItem sx={{ height: "4rem" }}>Hellooo</ListItem>
+        <ListItemButton sx={{ height: "2rem" }}>Edit</ListItemButton>
+        <ListItemButton sx={{ height: "2rem" }}>Archive</ListItemButton>
+        <ListItemButton sx={{ height: "2rem" }}>Share</ListItemButton>
+        <ListItemButton
+          sx={{ height: "2rem" }}
+          onClick={() => {
+            setOpenDelete(true);
+          }}
+        >
+          Delete
+        </ListItemButton>
       </List>
     );
   }
@@ -125,6 +172,31 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, profile }) => {
           <PersonAddOutlined sx={{ color: primaryDark }} />
         </IconButton>
       )}
+      <Dialog
+        open={openDelete}
+        onClose={() => {
+          setOpenDelete(false);
+        }}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {"Are you sure you want to delete this post?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button autoFocus onClick={() => setOpenDelete(false)}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              deletePost();
+              setOpenDelete(false);
+            }}
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </FlexBetween>
   );
 };
