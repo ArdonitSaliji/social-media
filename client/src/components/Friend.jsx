@@ -3,7 +3,18 @@ import {
   PersonRemoveOutlined,
   MoreHoriz,
 } from "@mui/icons-material";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setFriends } from "state";
@@ -16,6 +27,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, profile }) => {
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
+  const [edit, setEdit] = useState(false);
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
@@ -38,6 +50,28 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, profile }) => {
     const data = await response.json();
     dispatch(setFriends({ friends: data }));
   };
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      zIndex: "2",
+      borderRadius: "10px",
+      button: true,
+      transform: "translateY(100%)",
+      right: "0",
+      width: "8rem",
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+      bottom: "0",
+    },
+  }));
+
+  function SearchResults() {
+    const classes = useStyles();
+    return (
+      <List sx={{ position: "absolute" }} className={classes.root}>
+        <ListItem sx={{ height: "4rem" }}>Hellooo</ListItem>
+      </List>
+    );
+  }
 
   return (
     <FlexBetween>
@@ -69,8 +103,12 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, profile }) => {
       </FlexBetween>
 
       {profile ? (
-        <IconButton sx={{ backgroundColor: primaryLight, p: "0.6rem" }}>
+        <IconButton
+          onClick={() => setEdit((prev) => !prev)}
+          sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+        >
           <MoreHoriz sx={{ color: primaryDark }} />
+          {edit && <SearchResults />}
         </IconButton>
       ) : isFriend ? (
         <IconButton
