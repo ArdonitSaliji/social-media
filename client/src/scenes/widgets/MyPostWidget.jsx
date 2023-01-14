@@ -57,6 +57,7 @@ const MyPostWidget = ({ picturePath }) => {
       dispatch(setPosts({ posts: data }));
     } else {
       const a = data.filter((x) => x.userId === _id && x);
+
       dispatch(setPosts({ posts: a }));
     }
 
