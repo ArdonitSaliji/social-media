@@ -8,14 +8,10 @@ import {
   Button,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
   IconButton,
   List,
-  ListItem,
   ListItemButton,
-  ListItemText,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -24,12 +20,15 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setFriends, setPosts } from "state";
+import Popup from "./EditPost";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
 const Friend = ({
   postId,
   friendId,
+  picturePath,
+  description,
   name,
   subtitle,
   userPicturePath,
@@ -40,14 +39,20 @@ const Friend = ({
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
+  const posts = useSelector((state) => state.posts);
+
   const [edit, setEdit] = useState(false);
+  const [popup, setPopup] = useState({
+    open: false,
+    post: "",
+    picture: "",
+  });
   const [openDelete, setOpenDelete] = useState(false);
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
-  const isProfile = useSelector((state) => state.isProfile);
   const isFriend =
     friends.length > 0 && friends?.find((friend) => friend._id === friendId);
 
@@ -107,7 +112,22 @@ const Friend = ({
     const classes = useStyles();
     return (
       <List sx={{ position: "absolute" }} className={classes.root}>
-        <ListItemButton sx={{ height: "2rem" }}>Edit</ListItemButton>
+        <ListItemButton
+          sx={{ height: "2rem" }}
+          id={postId}
+          onClick={(e) => {
+            const findPost = posts.find(
+              (post) => post._id === e.target.id && post
+            );
+            setPopup({
+              ...popup,
+              post: findPost,
+              open: true,
+            });
+          }}
+        >
+          Edit
+        </ListItemButton>
         <ListItemButton sx={{ height: "2rem" }}>Archive</ListItemButton>
         <ListItemButton sx={{ height: "2rem" }}>Share</ListItemButton>
         <ListItemButton
@@ -199,6 +219,13 @@ const Friend = ({
           </Button>
         </DialogActions>
       </Dialog>
+      <Popup
+        title="Employee Form"
+        popup={popup}
+        setPopup={setPopup}
+        postId={postId}
+        description={description}
+      ></Popup>
     </FlexBetween>
   );
 };
