@@ -8,6 +8,28 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDHMkXpLX7FAiHcnTh50iwivk_5k-i_Kxo",
+  authDomain: "socio-d4748.firebaseapp.com",
+  projectId: "socio-d4748",
+  storageBucket: "socio-d4748.appspot.com",
+  messagingSenderId: "1076967790667",
+  appId: "1:1076967790667:web:648cbb8ee3e21573d195ce",
+  measurementId: "G-WBK543SYJ3",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
