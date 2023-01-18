@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
-
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -28,8 +28,18 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
+const firestore = getFirestore();
+const docs = doc(firestore, "users/users");
+const write = () => {
+  const docData = {
+    description: "A delicious vanilla latte",
+    price: 3.99,
+    milk: "Whole",
+    vegan: false,
+  };
+  setDoc(docs, docData);
+};
+write();
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
