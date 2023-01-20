@@ -49,6 +49,33 @@ export const getUserPosts = async (req, res) => {
 };
 
 /* UPDATE */
+
+export const updatePost = async (req, res) => {
+  try {
+    const { postId, description, picturePath } = req.body;
+    let update = {};
+
+    if (description) {
+      update.description = description;
+    }
+    if (picturePath) {
+      update.picturePath = picturePath;
+    }
+
+    if (Object.keys(update).length > 0) {
+      const post = await Post.findByIdAndUpdate(postId, {
+        description: description,
+        picturePath: picturePath,
+      });
+      return res.status(200).json(post);
+    } else {
+      res.status(404).json({ message: "You didn't change anything" });
+    }
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 export const likePost = async (req, res) => {
   try {
     const { id } = req.params;
@@ -73,6 +100,7 @@ export const likePost = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
 /* DELETE */
 export const deletePost = async (req, res) => {
   try {

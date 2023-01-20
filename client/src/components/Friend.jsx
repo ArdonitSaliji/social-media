@@ -20,7 +20,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setFriends, setPosts } from "state";
-import Popup from "./EditPost";
+import EditPost from "./EditPost";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
@@ -219,13 +219,13 @@ const Friend = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Popup
+      <EditPost
         title="Employee Form"
         popup={popup}
         setPopup={setPopup}
         postId={postId}
         description={description}
-      ></Popup>
+      ></EditPost>
     </FlexBetween>
   );
 };

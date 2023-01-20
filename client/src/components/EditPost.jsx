@@ -1,4 +1,3 @@
-import { AccountCircle, Image } from "@mui/icons-material";
 import {
   Dialog,
   DialogTitle,
@@ -9,11 +8,46 @@ import {
 } from "@mui/material";
 
 import { Button } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import PostTable from "./PostTable";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+export default function EditPost(props) {
+  const {
+    popup: { post, open },
+    setPopup,
+  } = props;
 
-export default function Popup(props) {
-  const { popup, setPopup } = props;
+  const [image, setImage] = useState(null);
+  const [showImage, setShowImage] = useState(true);
+  const [postDesc, setPostDesc] = useState(post.description);
+  const { _id } = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
+
+  const handlePost = async () => {
+    const formData = new FormData();
+    formData.append("postId", post._id);
+    formData.append("description", postDesc || post.description);
+    if (image) {
+      formData.append("picture", image);
+      formData.append("picturePath", image.name);
+    }
+
+    const response = await fetch(`http://localhost:3001/posts/update`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await response.json();
+    console.log(data);
+    setPopup((prev) => ({ ...prev, post: { picturePath: data.picturePath } }));
+    setImage(null);
+
+    window.location.reload();
+  };
+
   return (
-    <Dialog sx={{ mb: "3rem" }} open={popup.open}>
+    <Dialog sx={{ mb: "3rem" }} open={open}>
       <DialogTitle>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Typography variant="h6" component="div">
@@ -21,32 +55,78 @@ export default function Popup(props) {
           </Typography>
         </div>
       </DialogTitle>
-      <DialogContent sx={{ minWidth: "350px", minHeight: "300px" }} dividers>
+      <DialogContent
+        sx={{
+          minWidth: "400px",
+          minHeight: "350px",
+          pb: 0,
+          paddingBottom: "6rem",
+        }}
+        dividers
+      >
         <TextField
           variant="standard"
           fullWidth
           multiline
           sx={{ border: "none", outline: "none" }}
-          defaultValue={popup.post.description}
+          defaultValue={post.description}
+          placeholder="What's on your mind?"
           InputProps={{
             disableUnderline: true,
           }}
+          onChange={(e) => setPostDesc(e.target.value)}
         />
-        <img
-          src={`http://localhost:3001/assets/${popup.post.picturePath}`}
-          alt=""
-        />
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "center",
+            marginTop: "2rem",
+          }}
+        >
+          {showImage && post.picturePath && (
+            <>
+              <img
+                src={`http://localhost:3001/assets/${post.picturePath}`}
+                style={{ width: "80%", height: "80%" }}
+                alt=""
+              />
+              <CloseIcon
+                onClick={() => setShowImage(false)}
+                sx={{
+                  position: "absolute",
+                  transform: "translateY(-0.7rem)",
+                  right: "2.5rem",
+                  bgcolor: "#3e4042",
+                  borderRadius: "50%",
+                  width: "2rem",
+                  height: "2rem",
+                  cursor: "pointer",
+                }}
+              />
+            </>
+          )}
+          <PostTable image={image} setImage={setImage} imageShown={showImage} />
+        </div>
       </DialogContent>
       <DialogActions>
         <Button
           sx={{ width: "50%" }}
-          onClick={() => setPopup({ ...popup, open: false })}
+          onClick={() => {
+            setTimeout(() => {
+              setShowImage(true);
+            }, 300);
+            setPopup((prev) => ({ ...prev, open: false }));
+          }}
         >
           Cancel
         </Button>
         <Button
           sx={{ width: "50%" }}
-          onClick={() => setPopup({ ...popup, open: false })}
+          onClick={() => {
+            handlePost();
+            // setPopup((prev) => ({ ...prev, open: false }));
+          }}
         >
           Done
         </Button>
