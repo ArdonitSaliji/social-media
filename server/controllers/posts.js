@@ -60,13 +60,12 @@ export const updatePost = async (req, res) => {
     }
     if (picturePath) {
       update.picturePath = picturePath;
+    } else {
+      update.picturePath = "";
     }
 
     if (Object.keys(update).length > 0) {
-      const post = await Post.findByIdAndUpdate(postId, {
-        description: description,
-        picturePath: picturePath,
-      });
+      const post = await Post.findByIdAndUpdate(postId, update);
       return res.status(200).json(post);
     } else {
       res.status(404).json({ message: "You didn't change anything" });

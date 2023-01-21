@@ -21,6 +21,7 @@ export default function EditPost(props) {
   const [image, setImage] = useState(null);
   const [showImage, setShowImage] = useState(true);
   const [postDesc, setPostDesc] = useState(post.description);
+
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
 
@@ -31,6 +32,9 @@ export default function EditPost(props) {
     if (image) {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
+    } else if (!image && !!showImage) {
+      formData.append("picture", null);
+      formData.append("picturePath", null);
     }
 
     const response = await fetch(`http://localhost:3001/posts/update`, {
@@ -38,8 +42,8 @@ export default function EditPost(props) {
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
+    console.log(response);
     const data = await response.json();
-    console.log(data);
     setPopup((prev) => ({ ...prev, post: { picturePath: data.picturePath } }));
     setImage(null);
 
@@ -88,7 +92,7 @@ export default function EditPost(props) {
             <>
               <img
                 src={`http://localhost:3001/assets/${post.picturePath}`}
-                style={{ width: "80%", height: "80%" }}
+                style={{ width: "18rem", height: "18rem" }}
                 alt=""
               />
               <CloseIcon
@@ -121,15 +125,21 @@ export default function EditPost(props) {
         >
           Cancel
         </Button>
-        <Button
-          sx={{ width: "50%" }}
-          onClick={() => {
-            handlePost();
-            // setPopup((prev) => ({ ...prev, open: false }));
-          }}
-        >
-          Done
-        </Button>
+        {postDesc === post.description && showImage ? (
+          <Button disabled={true} sx={{ width: "50%" }}>
+            Done
+          </Button>
+        ) : (
+          <Button
+            sx={{ width: "50%" }}
+            onClick={() => {
+              handlePost();
+              // setPopup((prev) => ({ ...prev, open: false }));
+            }}
+          >
+            Done
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

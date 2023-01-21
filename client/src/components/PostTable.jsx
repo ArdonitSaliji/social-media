@@ -45,7 +45,7 @@ export default function PostTable(props) {
         maxWidth: "95%",
       }}
     >
-      {isImage && !imageShown && (
+      {isImage && (
         <Dropzone
           acceptedFiles=".jpg,.jpeg,.png"
           multiple={false}
