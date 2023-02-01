@@ -1,8 +1,4 @@
-import {
-  PersonAddOutlined,
-  PersonRemoveOutlined,
-  MoreHoriz,
-} from "@mui/icons-material";
+import { PersonAddOutlined, PersonRemoveOutlined, MoreHoriz } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -14,15 +10,16 @@ import {
   ListItemButton,
   Typography,
   useTheme,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { setFriends, setPosts } from "state";
-import EditPost from "./EditPost";
-import FlexBetween from "./FlexBetween";
-import UserImage from "./UserImage";
+} from '@mui/material';
+
+import { makeStyles } from '@mui/styles';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setFriends, setPosts } from 'state';
+import EditPost from './EditPost';
+import FlexBetween from './FlexBetween';
+import UserImage from './UserImage';
 
 const Friend = ({
   postId,
@@ -44,8 +41,8 @@ const Friend = ({
   const [edit, setEdit] = useState(false);
   const [popup, setPopup] = useState({
     open: false,
-    post: "",
-    picture: "",
+    post: '',
+    picture: '',
   });
   const [openDelete, setOpenDelete] = useState(false);
   const { palette } = useTheme();
@@ -53,55 +50,48 @@ const Friend = ({
   const primaryDark = palette.primary.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
-  const isFriend =
-    friends.length > 0 && friends?.find((friend) => friend._id === friendId);
+  const isFriend = friends.length > 0 && friends?.find((friend) => friend._id === friendId);
 
   const patchFriend = async () => {
-    const response = await fetch(
-      `http://localhost:3001/users/${_id}/${friendId}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`http://localhost:3001/users/${_id}/${friendId}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
     const data = await response.json();
 
     dispatch(setFriends({ friends: data }));
   };
   const useStyles = makeStyles((theme) => ({
     root: {
-      zIndex: "2",
-      borderRadius: "10px",
+      zIndex: '2',
+      borderRadius: '10px',
       button: true,
-      transform: "translateY(100%)",
-      right: "0",
-      width: "8rem",
+      transform: 'translateY(100%)',
+      right: '0',
+      width: '8rem',
       maxWidth: 360,
       backgroundColor: theme.palette.background.paper,
-      bottom: "0",
+      bottom: '0',
     },
   }));
 
   const deletePost = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${postId}/delete/post`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: _id,
-        }),
-      }
-    );
+    const response = await fetch(`http://localhost:3001/posts/${postId}/delete/post`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: _id,
+      }),
+    });
     const { allPosts, userPosts } = await response.json();
 
-    if (window.location.pathname === "/home") {
+    if (window.location.pathname === '/home') {
       dispatch(setPosts({ posts: allPosts }));
     } else {
       dispatch(setPosts({ posts: userPosts }));
@@ -111,14 +101,12 @@ const Friend = ({
   function SearchResults() {
     const classes = useStyles();
     return (
-      <List sx={{ position: "absolute" }} className={classes.root}>
+      <List sx={{ position: 'absolute' }} className={classes.root}>
         <ListItemButton
-          sx={{ height: "2rem" }}
+          sx={{ height: '2rem' }}
           id={postId}
           onClick={(e) => {
-            const findPost = posts.find(
-              (post) => post._id === e.target.id && post
-            );
+            const findPost = posts.find((post) => post._id === e.target.id && post);
             setPopup({
               ...popup,
               post: findPost,
@@ -128,10 +116,10 @@ const Friend = ({
         >
           Edit
         </ListItemButton>
-        <ListItemButton sx={{ height: "2rem" }}>Archive</ListItemButton>
-        <ListItemButton sx={{ height: "2rem" }}>Share</ListItemButton>
+        <ListItemButton sx={{ height: '2rem' }}>Archive</ListItemButton>
+        <ListItemButton sx={{ height: '2rem' }}>Share</ListItemButton>
         <ListItemButton
-          sx={{ height: "2rem" }}
+          sx={{ height: '2rem' }}
           onClick={() => {
             setOpenDelete(true);
           }}
@@ -144,8 +132,8 @@ const Friend = ({
 
   return (
     <FlexBetween>
-      <FlexBetween gap="1rem">
-        <UserImage image={userPicturePath} size="55px" />
+      <FlexBetween gap='1rem'>
+        <UserImage image={userPicturePath} size='55px' />
         <Box
           onClick={() => {
             navigate(`/profile/${friendId}`);
@@ -154,18 +142,18 @@ const Friend = ({
         >
           <Typography
             color={main}
-            variant="h5"
-            fontWeight="500"
+            variant='h5'
+            fontWeight='500'
             sx={{
-              "&:hover": {
+              '&:hover': {
                 color: palette.primary.light,
-                cursor: "pointer",
+                cursor: 'pointer',
               },
             }}
           >
             {name}
           </Typography>
-          <Typography color={medium} fontSize="0.75rem">
+          <Typography color={medium} fontSize='0.75rem'>
             {subtitle}
           </Typography>
         </Box>
@@ -174,7 +162,7 @@ const Friend = ({
       {profile ? (
         <IconButton
           onClick={() => setEdit((prev) => !prev)}
-          sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+          sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
         >
           <MoreHoriz sx={{ color: primaryDark }} />
           {edit && <SearchResults />}
@@ -182,14 +170,14 @@ const Friend = ({
       ) : isFriend ? (
         <IconButton
           onClick={() => patchFriend()}
-          sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+          sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
         >
           <PersonRemoveOutlined sx={{ color: primaryDark }} />
         </IconButton>
       ) : (
         <IconButton
           onClick={() => patchFriend()}
-          sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+          sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
         >
           <PersonAddOutlined sx={{ color: primaryDark }} />
         </IconButton>
@@ -199,10 +187,10 @@ const Friend = ({
         onClose={() => {
           setOpenDelete(false);
         }}
-        aria-labelledby="responsive-dialog-title"
+        aria-labelledby='responsive-dialog-title'
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Are you sure you want to delete this post?"}
+        <DialogTitle id='responsive-dialog-title'>
+          {'Are you sure you want to delete this post?'}
         </DialogTitle>
         <DialogActions>
           <Button autoFocus onClick={() => setOpenDelete(false)}>
@@ -220,7 +208,7 @@ const Friend = ({
         </DialogActions>
       </Dialog>
       <EditPost
-        title="Employee Form"
+        title='Employee Form'
         popup={popup}
         setPopup={setPopup}
         postId={postId}
