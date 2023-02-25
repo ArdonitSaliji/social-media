@@ -14,8 +14,9 @@ import postRoutes from './routes/posts.js';
 import { register } from './controllers/auth.js';
 import { createPost, updatePost } from './controllers/posts.js';
 import { verifyToken } from './middleware/auth.js';
-import User from './models/User.js';
-import Post from './models/Post.js';
+// import User from './models/User.js';
+// import Post from './models/Post.js';
+
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,16 +34,17 @@ app.use(morgan('common'));
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/assets');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
+    destination: function (req, file, cb) {
+        cb(null, 'public/assets');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    },
 });
 const upload = multer({ storage });
 
@@ -60,16 +62,16 @@ app.use('/posts', postRoutes);
 const PORT = process.env.PORT || 3001;
 mongoose.set('strictQuery', true);
 mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: 'social',
-  })
-  .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    .connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        dbName: 'social',
+    })
+    .then(() => {
+        app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
-    /* ADD DATA ONE TIME */
-    // User.insertMany(users);
-    // Post.insertMany(posts);
-  })
-  .catch((error) => console.log(`${error} did not connect`));
+        /* ADD DATA ONE TIME */
+        // User.insertMany(users);
+        // Post.insertMany(posts);
+    })
+    .catch((error) => console.log(`${error} did not connect`));
